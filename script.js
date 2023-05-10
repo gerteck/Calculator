@@ -12,7 +12,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b == 0) {
-        return "can't do that!"
+        return "Undef, Sir"
     }
 
     return a/b;
@@ -21,6 +21,7 @@ function divide(a, b) {
 // Initialize some variables
 let num1 = 0;
 let num2 = 0;
+let complete = true;
 let prevAns = 0;
 let op = "+";
 
@@ -28,7 +29,6 @@ const display = document.querySelector('#output');
 refreshDisplay();
 
 function operate(a, b, operator) {
-    let result = 0;
     console.log(operator);
 
     switch(operator) {
@@ -47,11 +47,18 @@ function operate(a, b, operator) {
         case '/':
             num1 = divide(a, b);
             break;
+
+        case 'x10':
+            num1 = a * Math.pow(10, b);
+            break;
         
         default:
             num1 = "op not recognised";
     }
     prevAns = num1;
+
+    //when we call we do num2 - num1;
+
     refreshDisplay();
 }
 
@@ -89,11 +96,20 @@ numbers.forEach(number =>
 
 //Operators, + - * /
 // When operator is called we store the current value in num 2.
-
 function inputOp(sign) {
-    op = sign;
-    num2 = num1;
-    num1 = 0;
+
+    // If operator not chosen before
+    if(complete) {
+        op = sign;
+        num2 = num1;
+        num1 = 0;
+        complete = false;
+    } else { 
+        op = sign;
+        num1 = 0;
+        // else we just change the operator to be used
+        // note means num2 has alr been s
+    }
 }
 
 const operators = document.querySelectorAll('.operator');
@@ -104,8 +120,12 @@ operators.forEach(operate =>
 
 //equals:
 const equals = document.querySelector('.equal');
-equals.addEventListener('click', () => operate(num1, num2, op));
-
+equals.addEventListener('click', () => {
+    if (!complete) {
+        operate(num2, num1, op);
+        complete = true;
+    }
+});
 
 
 //Misc Stuff
